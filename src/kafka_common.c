@@ -43,6 +43,10 @@ void p_kafka_init_host(struct p_kafka_host *kafka_host, char *config_file)
       rd_kafka_conf_set_dr_cb(kafka_host->cfg, p_kafka_msg_delivered);
       rd_kafka_conf_set_stats_cb(kafka_host->cfg, p_kafka_stats);
       rd_kafka_conf_set_opaque(kafka_host->cfg, kafka_host);
+
+      char errstr[255];
+      rd_kafka_conf_set(kafka_host->cfg, "queue.buffering.max.messages", "2000000", errstr, sizeof(errstr));
+
       p_kafka_apply_global_config(kafka_host);
 
       if (config.debug) {

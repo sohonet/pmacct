@@ -421,9 +421,14 @@ int p_kafka_produce_data_to_part(struct p_kafka_host *kafka_host, void *data, u_
   }
   else return ERR;
 
-  rd_kafka_poll(kafka_host->rk, 0);
+  if(rd_kafka_outq_len(kafka_host->rk) % 1000 == 0)
+  {
+      rd_kafka_poll(kafka_host->rk, 10);
+  } else {
+      rd_kafka_poll(kafka_host->rk, 0);
+  }
 
-  return ret; 
+  return ret;
 }
 
 int p_kafka_produce_data(struct p_kafka_host *kafka_host, void *data, u_int32_t data_len)
